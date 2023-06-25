@@ -1,8 +1,8 @@
 import axios from "axios";
-
 export class ContactService{
-    static serverURL = 'http://localhost:9000';
-
+    static serverURL = "https://contact-manager-app-5saq.onrender.com";
+    static serverUrl = "https://contact-manager-app-5saq.onrender.com";
+    
     static getAllContacts() {
         let dataURL = `${this.serverURL}/contacts`;
 

@@ -8,7 +8,7 @@ let ContactList = () => {
   let [query, setQuery] = useState({
     text: ''
   });
-
+  const serverURL ="https://contact-manager-app-5saq.onrender.com"
 
   let [state, setState] = useState({
     loading: false,
@@ -16,12 +16,14 @@ let ContactList = () => {
     filteredContacts: [],
     errorMessage: ''
   });
+  console.log("state",state);
   const [isRefress, setRefress] = useState(false);
   const getContact = async () => {
     try {
       setState({ ...state, loading: true });
       let response = await ContactService.getAllContacts();
-      setState({ ...state, loading: false, contacts: response.data,
+      console.log("response",response.data.contacts);
+      setState({ ...state, loading: false, contacts: response.data.contacts,
       filteredContacts: response.data });
 
     }
@@ -42,10 +44,10 @@ let ContactList = () => {
     console.log(" i am deleting function",contactId);
     try {
     // let res = await ContactService.deleteContact(contactId);
-      let contact = await axios.get("http://localhost:9000/contacts")
+      let contact = await axios.get(`${serverURL}/contacts`)
       console.log("contact",contact.data);
-      let res = await axios.delete(`http://localhost:9000/contacts/${contactId}`,contact.data)
-      console.log("response", res);
+      let res = await axios.delete(`${serverURL}/contacts/${contactId}`)
+      console.log("response delete", res);
       setRefress(!isRefress);//true//false
       if (res) {
         setState({ ...state, loading: true });
@@ -135,8 +137,7 @@ let ContactList = () => {
             <div className="container">
               <div className="row ">
                 {
-                  
-                  filteredContacts.length > 0 && filteredContacts.map(contact => {
+                  filteredContacts?.contacts?.length > 0 && filteredContacts?.contacts?.map(contact => {
 
                     return (
     
@@ -168,19 +169,19 @@ let ContactList = () => {
                               </div>
                               <div className="col-md-1 d-flex flex-column align-items-center">
                                 <Link
-                                  to={`/contact/view/${contact.id}`}
+                                  to={`/contact/view/${contact._id}`}
                                   className="btn btn-warning my-1"
                                 >
                                   <i className="fa fa-eye"></i>
                                 </Link>
                                 <Link
-                                  to={`/contact/edit/${contact.id}`}
+                                  to={`/contact/edit/${contact._id}`}
                                   className="btn btn-primary my-1"
                                 >
                                   <i className="fa fa-pen"></i>
                                 </Link>
                                 <button onClick={() => {
-                                  clickDelete(contact.id)             
+                                  clickDelete(contact._id)             
                                 }}  className="btn btn-danger my-1">
                                   {" "}
                                   <i className="fa fa-trash"></i>{" "}

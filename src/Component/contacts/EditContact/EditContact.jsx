@@ -6,7 +6,8 @@ import Spinner from "../../Spinner/Spinner";
 let EditContact = () => {
   let navigate = useNavigate();
   let { contactId } = useParams();
-
+  const serverURL ="https://contact-manager-app-5saq.onrender.com"
+  console.log("contactId",contactId);
   let [state, setState] = useState({
     loading: false,
     contact: {
@@ -15,8 +16,6 @@ let EditContact = () => {
       mobile: "",
       email: "",
       company: "",
-      title: "",
-      groupId: "",
     },
     groups: [],
     errorMessage: "",
@@ -24,13 +23,14 @@ let EditContact = () => {
   let data = async () => {
     try {
       setState({ ...state, loading: true });
-      let res = await axios.get(`http://localhost:9000/contacts/${contactId}`);
-      let groupRes = await axios.get("http://localhost:9000/groups");
+      let res = await axios.get(`${serverURL}/contacts/${contactId}`);
+      console.log("Response",res);
+      // let groupRes = await axios.get("http://localhost:9000/groups");
       setState({
         ...state,
         loading: false,
         contact: res.data,
-        groups: groupRes.data,
+        // groups: groupRes.data,
       });
     } catch (error) {
       setState({
@@ -56,11 +56,11 @@ let EditContact = () => {
 
   let submitForm = async (event) => {
     event.preventDefault();
-      try {
-          console.log("update input", state.contact);
-          
-          let res = await axios.put(`http://localhost:9000/contacts/${contactId}`, state.contact);
-          console.log("response",res)
+    try {
+      console.log("update input", state.contact);
+
+      let res = await axios.put(`${serverURL}/contacts/${contactId}`, state.contact);
+      console.log("response", res)
       // let res = await ContactService.createContact(state.contact);
       if (res) {
         navigate("/contact/list", { replace: true });
@@ -150,39 +150,6 @@ let EditContact = () => {
                         className="form-control "
                         placeholder="Company"
                       />
-                    </div>
-
-                    <div className="mb-2">
-                      <input
-                        required="true"
-                        name="title"
-                        value={contact.title}
-                        onChange={updateInput}
-                        type="text"
-                        className="form-control "
-                        placeholder="Title"
-                      />
-                    </div>
-
-                    <div className="mb-2">
-                      <select
-                        required="true"
-                        name="groupId"
-                        value={contact.groupId}
-                        onChange={updateInput}
-                        className="form-control"
-                        id=""
-                      >
-                        <option value="">Select a Group</option>{" "}
-                        {groups.length > 0 &&
-                          groups.map((group) => {
-                            return (
-                              <option key={group.id} value={group.id}>
-                                {group.name}
-                              </option>
-                            );
-                          })}{" "}
-                      </select>
                     </div>
                     <div className="mb-2">
                       <input

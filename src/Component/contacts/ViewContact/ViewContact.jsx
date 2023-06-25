@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { Link ,useParams} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ContactService } from "../../../services/ContactService";
 import Spinner from "../../Spinner/Spinner";
 import axios from "axios";
 let ViewContact = () => {
   let { contactId } = useParams();
+  const serverURL ="https://contact-manager-app-5saq.onrender.com"
   console.log("i am working");
   // console.log("params",contactId);
-  let [state,setState] = useState({
+  let [state, setState] = useState({
     loading: false,
     contact: {},
     errorMessage: '',
-    group:{}
+    group: {}
   });
 
   const func = async () => {
     try {
       setState({ ...state, loading: true });
-      console.log("response",contactId);
+      console.log("response", contactId);
       // console.log("response",ContactService.getContact(contactId));
       // let res = await ContactService.getContact(contactId)
-      let res = await axios.get(`http://localhost:9000/contacts/${contactId}`);
-      console.log("res",res);
+      let res = await axios.get(`${serverURL}/contacts/${contactId}`);
+      console.log("res1", res.data);
       // let res = await ContactService.getContact(contactId);
-      let groupResponse = await
-        ContactService.getGroup(res.data)
+      // let groupResponse = await
+      //   ContactService.getGroup(res.data)
       setState({
         ...state, loading: false,
         contact: res.data,
-        group:groupResponse.data
+        // group:groupResponse.data
       });
-      console.log(res.data);
     }
     catch (error) {
       setState({
@@ -42,10 +42,11 @@ let ViewContact = () => {
   }
   useEffect(() => {
     func()
-  },[contactId]);
+  }, [contactId]);
 
 
-  let { loading,contact, errorMessage,group} = state;
+  let { loading, contact, errorMessage, group } = state;
+  console.log("contact", contact);
   return (
     <React.Fragment>
 
@@ -64,65 +65,59 @@ let ViewContact = () => {
         </div>
       </section>
       {
-        loading?<Spinner/>:<React.Fragment>
-        
+        loading ? <Spinner /> : <React.Fragment>
           {
-            Object.keys(contact).length > 0 && Object.keys(group).length > 0 &&   <section className="view-contact mt-3">
-            <div className="container">
-              <div className="row align-item-center">
-                <div className="col-md-4">
-                  <img
-                    src={contact.photo}
-                    alt=""
-                    className="contact-img"
-                  />
-                </div>
-                          <div className="col-md-8">
-                          <ul className="list-group">
-                          <li className="list-group-item list-group-item-action">
-                          Name: <span className="fw-bold">{contact.name }</span>
-                      </li>
-                    
+            Object.keys(contact).length > 0&& <section className="view-contact mt-3">
+              <div className="container">
+                <div className="row align-item-center">
+                  <div className="col-md-4">
 
-    
-                          <li className="list-group-item list-group-item-action">
-                          Mobile: <span className="fw-bold">{ contact.mobile}</span>
-                          </li>
-                          <li className="list-group-item list-group-item-action">
-                            Email:{" "}
-                            <span className="fw-bold">{ contact.email}</span>
+                    <img
+                      src={contact.photo}
+                      alt=""
+                      className="contact-img"
+                    />
+                  </div>
+                  <div className="col-md-8">
+                    <ul className="list-group">
+                      <li className="list-group-item list-group-item-action">
+                        Name: <span className="fw-bold">{contact.name}</span>
                       </li>
-                                  <li className="list-group-item list-group-item-action">
-                                  Company: <span className="fw-bold">{ contact.company}</span>
-                                </li>
-                                <li className="list-group-item list-group-item-action">
-                                Title: <span className="fw-bold">{ contact.title}</span>
-                                  </li>
-                                  <li className="list-group-item list-group-item-action">
-                                  Group: <span className="fw-bold">{group.name}</span>
-                                </li></ul>                
-                          </div>
-              </div>
-              <div className="row">
-                <div className="col">
-                  <Link to={"/contact/list"} className="btn btn-warning">
-                    Back
-                  </Link>
+
+
+
+                      <li className="list-group-item list-group-item-action">
+                        Mobile: <span className="fw-bold">{contact.mobile}</span>
+                      </li>
+                      <li className="list-group-item list-group-item-action">
+                        Email:{" "}
+                        <span className="fw-bold">{contact.email}</span>
+                      </li>
+                      <li className="list-group-item list-group-item-action">
+                        Company: <span className="fw-bold">{contact.company}</span>
+                      </li></ul>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <Link to={"/contact/list"} className="btn btn-warning">
+                      Back
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-       }
-        
-        
+            </section>
+          }
+
+
         </React.Fragment>
-}
+      }
 
 
 
 
 
-  
+
     </React.Fragment>
   );
 };
